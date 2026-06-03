@@ -1,23 +1,21 @@
 
 from sqlalchemy import create_engine
+import os
 
-def load_to_postgres(df):
+def load_data(df, table_name="clean_customers"):
+    database_url = os.getenv("DATABASE_URL", "sqlite:///warehouse/etl_warehouse.db")
 
-    username = "postgres"
-    password = "password"
-    host = "localhost"
-    port = "5432"
-    database = "data_pipeline"
-
-    engine = create_engine(
-        f"postgresql://{username}:{password}@{host}:{port}/{database}"
-    )
+    engine = create_engine(database_url)
 
     df.to_sql(
-        "clean_customers",
+        table_name,
         engine,
         if_exists="replace",
         index=False
     )
 
-    print("Data loaded into PostgreSQL.")
+    print(f"Data loaded into warehouse table: {table_name}")
+
+
+def load_to_postgres(df):
+    load_data(df)

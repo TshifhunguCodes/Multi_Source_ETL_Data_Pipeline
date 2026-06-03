@@ -1,18 +1,26 @@
 
+from extract.generate_data import generate_datasets
 from extract.extract_data import extract_all_data
 from transform.clean_data import clean_data
-from load.load_postgres import load_to_postgres
+from load.load_postgres import load_data
 
-print("Starting ETL Pipeline...")
+def run_pipeline():
+    print("Starting ETL Pipeline...")
 
-df = extract_all_data()
+    generate_datasets()
 
-print(f"Raw records: {len(df)}")
+    df = extract_all_data()
 
-cleaned_df = clean_data(df)
+    print(f"Raw records: {len(df)}")
 
-print(f"Cleaned records: {len(cleaned_df)}")
+    cleaned_df = clean_data(df)
 
-load_to_postgres(cleaned_df)
+    print(f"Cleaned records: {len(cleaned_df)}")
 
-print("Pipeline completed successfully!")
+    load_data(cleaned_df)
+
+    print("Pipeline completed successfully!")
+
+
+if __name__ == "__main__":
+    run_pipeline()

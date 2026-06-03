@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+
+venv/
+.venv/
+
+data/*.csv
+data/*.json
+data/*.txt
+data/*.db
+warehouse/*.db

@@ -3,6 +3,7 @@ from faker import Faker
 import pandas as pd
 import random
 import sqlite3
+from pathlib import Path
 
 fake = Faker()
 
@@ -28,15 +29,23 @@ def create_dataset(size=20000):
 
     return df
 
-df = create_dataset()
+def generate_datasets(size=20000, output_dir="data"):
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
-df.to_json("../data/customers.json", orient="records")
-df.to_csv("../data/customers.csv", index=False)
+    df = create_dataset(size)
 
-df.to_csv("../data/customers.txt", sep="|", index=False)
+    df.to_json(output_path / "customers.json", orient="records")
+    df.to_csv(output_path / "customers.csv", index=False)
+    df.to_csv(output_path / "customers.txt", sep="|", index=False)
 
-conn = sqlite3.connect("../data/customers.db")
-df.to_sql("customers", conn, if_exists="replace", index=False)
-conn.close()
+    conn = sqlite3.connect(output_path / "customers.db")
+    df.to_sql("customers", conn, if_exists="replace", index=False)
+    conn.close()
 
-print("Datasets generated successfully.")
+    print("Datasets generated successfully.")
+    return df
+
+
+if __name__ == "__main__":
+    generate_datasets()

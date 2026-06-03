@@ -1,7 +1,8 @@
 
 import pandas as pd
+from pathlib import Path
 
-def clean_data(df):
+def clean_data(df, output_path="data/clean_customers.csv"):
 
     df = df.drop_duplicates()
 
@@ -13,4 +14,9 @@ def clean_data(df):
 
     df = df[df["purchase_amount"] >= 0]
 
+    output_file = Path(output_path)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_file, index=False)
+
+    print(f"Cleaned data saved: {output_file}")
     return df
